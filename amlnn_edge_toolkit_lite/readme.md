@@ -110,15 +110,8 @@ Generates comprehensive performance reports (HTML) for the last inference sessio
 
 ## 🔍 Advanced Features & Insights
 
-### 1. Online TFLite Support
-AMLNNLite allows direct execution of quantized `.tflite` models.
-**Flow**: `Quantized TFLite` → `On-device Compile` → `ADLA` → `NPU Execution`.
-To enable TFLite export during initial conversion:
-```bash
-export ADLA_EXPORT_MIDDLE_TO_TFLITE=True
-```
 
-### 2. Layer-wise Visualization
+### 1. Layer-wise Visualization
 Using `amlnn.visualize()`, developers can inspect:
 - `hard_op_chart.html`: Hardware-accelerated operators.
 - `soft_op_chart.html`: CPU fallback operators.
@@ -128,7 +121,7 @@ Using `amlnn.visualize()`, developers can inspect:
 > [!TIP]
 > Enable metadata mapping to original TFLite layers by setting `export ADLA_DUMP_MODEL_INFO=True` before model conversion.
 
-### 3. NPU Utilization Monitoring
+### 2. NPU Utilization Monitoring
 Use the provided `NPU_utilization.py` script to monitor hardware load in real-time during heavy inference tasks.
 ```bash
 python NPU_utilization.py
