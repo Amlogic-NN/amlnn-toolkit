@@ -1,179 +1,121 @@
-# Amlogic Python Runtime – Quick Start
+# AMLNN: Amlogic Edge AI Inference Toolkit (Python) - PC Host
 
-# Amlogic Python Runtime
+This repository provides instructions for setting up the **Amlogic Python Runtime** environment on a PC Host and running demo models on Amlogic platforms via ADB. It abstracts complex interactions into a streamlined workflow, enabling rapid deployment and testing from your development machine.
 
-This repository provides instructions for setting up the **Amlogic Python Runtime** environment and running demo models on Amlogic platforms.
+## 🚀 Key Features
+
+- **Developer-Centric API**: Simplified workflow for model loading, configuration, and inference.
+- **Remote Execution**: Run Python scripts on your PC that execute inference on the connected Amlogic board via ADB.
+- **Deep Profiling**: Built-in visualization tools for layer-wise latency, bandwidth consumption, and NPU utilization.
+- **Flexible Data Handling**: Automatic handling of data format conversions (NCHW ↔ NHWC) and dequantization.
 
 ---
 
-## Supported Environment
+## 🛠 Supported Examples
 
-- **Host OS**: Ubuntu 20.04  
-- **Python Version**: Python 3.10  
+Accelerate your development with our curated list of model implementations:
+
+| Model | Repository Link |
+| :--- | :--- |
+| **MobileNet** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-toolkit/tree/main/example/mobilenetv2/02_verify_python) |
+| **ResNet** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-model-playground/tree/main/examples/resnet/py) |
+| **YOLOv11** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-model-playground/tree/main/examples/yolov11/py) |
+| **YOLOv8** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-model-playground/tree/main/examples/yolov8/py) |
+| **YOLOWorld** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-model-playground/tree/main/examples/yoloworld/py) |
+| **YOLOX** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-model-playground/tree/main/examples/yolox/py) |
+| **RetinaFace** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-model-playground/tree/main/examples/retinaface/py) |
+
+---
+
+## 💻 Environment Setup
+
+### Prerequisites
+- **Host OS**: Ubuntu 20.04
+- **Python**: 3.10
+- **ADB**: Installed and configured
+- **Target Device**: Connected via USB, ADB accessible
 
 > If multiple Python versions are installed on the host system, it is strongly recommended to manage Python environments using **Anaconda** or **Miniforge**.
 
----
+### Installation
 
-## 1. Environment Setup
+1. **Verify ADB Connection**:
+   Connect the host PC to the target device via USB.
+   ```bash
+   adb devices -l
+   adb shell echo "Connection OK"
+   ```
 
-### 1.1 Install Anaconda / Miniforge
+2. **Verify NPU Driver** (on Target Device):
+   Check the NPU driver version on the target device to determine the correct package.
+   ```bash
+   # Android
+   adb shell "dmesg | grep adla"
+   adb shell "strings /vendor/lib64/libadla.so | grep LIBADLA"
+   
+   # Linux / Yocto
+   adb shell "dmesg | grep adla"
+   adb shell "strings /usr/lib/libadla.so | grep LIBADLA"
+   ```
 
-Miniforge is a lightweight Conda distribution and is recommended.
+3. **Initialize Environment (Recommended: Miniforge)**:
+   ```bash
+   # Install Miniforge if needed
+   wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+   bash Miniforge3-Linux-x86_64.sh
+   
+   # Create Environment
+   conda create -n nnserver_310 python=3.10 -y
+   conda activate nnserver_310
+   ```
 
-```bash
-wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
-chmod +x Miniforge3-Linux-x86_64.sh
-bash Miniforge3-Linux-x86_64.sh
-```
+4. **Install Python Wheel and Dependencies**:
+   ```bash
+   pip install amlnn-xxx.whl
+   pip install -r requirements.txt
+   ```
 
----
-
-### 1.2 Create Python Virtual Environment
-
-After installing Anaconda or Miniforge, create and activate a Python 3.10 virtual environment:
-
-```bash
-conda create -n nnserver_310 python=3.10
-conda activate nnserver_310
-```
-
----
-
-### 1.3 Verify ADB Connection
-
-Connect the host PC to the target device via USB and verify that ADB can detect the device.
-
-```bash
-adb devices -l
-adb shell
-```
-
-The target device should be listed correctly, and you should be able to enter the shell.
-
----
-
-### 1.4 Verify NPU Driver Version
-
-Check the NPU driver version on the target device.  
-The detected driver version determines which Python Runtime release package should be used.
-
-#### Android
-
-```bash
-adb root
-adb shell
-dmesg | grep adla
-strings /vendor/lib64/libadla.so | grep LIBADLA
-```
-
-> If the system is 32-bit, replace `lib64` with `lib`.
-
-#### Linux / Yocto
-
-```bash
-adb shell
-dmesg | grep adla
-strings /usr/lib/libadla.so | grep LIBADLA
-```
+5. **Deploy nnserver to Target**:
+   Push the `nnserver` executable matching your target platform (Android/Linux, 32/64-bit) to the device.
+   
+   **Android**:
+   ```bash
+   adb root
+   adb push nnserver/arm64-v8a/nnserver /data/local/tmp/nnserver
+   adb shell "chmod +x /data/local/tmp/nnserver"
+   ```
+   
+   **Linux / Yocto**:
+   ```bash
+   adb push nnserver/aarch64-poky-linux/nnserver /usr/bin/nnserver
+   adb shell "chmod +x /usr/bin/nnserver"
+   ```
 
 ---
 
-### 1.5 Install Python Wheel and Dependencies
+## ⚡ Quick Start
 
-Install the Python Runtime wheel and its dependencies.
+### 1. Start nnserver on Device
+Open a **new terminal** and start `nnserver` on the device.
 
-- Python wheel: `aml-nn/python-api/amlnn-xxx.whl`
-- Dependency file: `aml-nn/python-api/requirements.txt`
-
-```bash
-python -m pip install amlnn-xxx.whl
-python -m pip install -r requirements.txt
-```
-
----
-
-### 1.6 Deploy and Configure nnserver
-
-Push the `nnserver` executable to the target device working directory.
-
-Recommended working paths:
-- **Android**: `/data/local/tmp`
-- **Linux / Yocto**: `/usr/bin`
-
-Available `nnserver` binaries:
-
-```text
-nnserver/
-├── arm64-v8a               # Android 64-bit
-├── armeabi-v7a             # Android 32-bit
-├── aarch64-poky-linux      # Yocto 64-bit
-├── arm-poky-linux          # Yocto 32-bit
-└── arm-none-linux-gnueabihf # Linux 32-bit
-```
-
-Select the binary that matches your target platform.
-
-#### Android
-
-```bash
-adb root
-adb push nnserver /data/local/tmp
-```
-
-#### Linux / Yocto
-
-```bash
-adb push nnserver /usr/bin
-```
-
----
-
-## Usage Guide
-
-### 2.1 Get ADLA Models
-
-Export the ADLA file in advance using a tool
-
-### 2.2 Start nnserver Service
-
-Open a new terminal and enter the device shell to start `nnserver`.
-
+**Android**:
 ```bash
 adb shell
-```
-
-#### Android
-
-```bash
 cd /data/local/tmp
-export LD_LIBRARY_PATH=/vendor/lib64
-chmod +x nnserver
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/vendor/lib64
 ./nnserver
 ```
 
-> If the system is 32-bit, replace `lib64` with `lib`.
-
-#### Linux / Yocto
-
+**Linux / Yocto**:
 ```bash
-cd /usr/bin
-chmod +x nnserver
+adb shell
 ./nnserver
 ```
 
-If `nnserver` starts successfully, output similar to the following will be displayed:
+You should see output indicating it is listening on ports (e.g., 8308, 8309, 8310).
 
-```text
-NNSERVER, v1.0.0, 2025.08
-nnserver start to work, listening on port 8308
-nnserver start to work, listening on port 8309
-nnserver start to work, listening on port 8310
-```
-
-### 2.3 MobileNetV2 Demo
-
-Run the following command in the host PC terminal:
+### 2. Run Python Inference (on PC)
+Run the example script on your PC. It will communicate with `nnserver` on the board.
 
 ```bash
 cd example/mobilenetv2/02_verify_python
@@ -185,20 +127,62 @@ python mobilenetv2.py \
     --loglevel INFO
 ```
 
-Upon successful execution, output similar to the following will be displayed, including hardware platform information, input/output basic info, NPU latency, bandwidth consumption, etc.:
+Upon successful execution, you will see hardware platform info, input/output tensors, NPU latency, and bandwidth usage.
 
-```text
-......
-I Hardware platform: S905X5 (Type: 4)
-I Model tensor info - Inputs: 1, Outputs: 1
-I Input[0] - Shape: (1, 224, 224, 3), Elements: 150528, Stride: 1, Size: 150528bytes, Format: NHWC, Type: 0, Quantization: scale=0.007812, zp=128
-I Output[0] - Shape: (1, 1, 1, 1001), Elements: 1001, Stride: 1, Size: 1001bytes, Format: NHWC, Type: 0, Quantization: scale=0.098893, zp=58
-I Average time: 2.396250009536743 ms
-I FPS: 417.3187255859375
-I Bandwidth: 3.143280029296875 Mbytes
-......
+---
+
+## 📖 API Reference Summary
+
+### `AMLNN()`
+Initialize the toolkit core engine.
+
+### `config(board_work_path, model_path, run_cycles=1, loglevel="ERROR")`
+Configure the runtime environment.
+- `board_work_path`: Workspace on the board (where `nnserver` is running or can write temp files).
+- `model_path`: Path to `.adla` or quantized `.tflite` (on the PC, will be pushed to board or loaded).
+- `run_cycles`: Number of iterations for profiling.
+
+### `init()`
+Load the model into the NPU and allocate hardware resources.
+
+### `inference(inputs, inputs_data_format='NHWC', outputs_data_format='NHWC', dequantize_outputs=True)`
+Execute synchronous inference.
+- Handles padding/strips automatically.
+- Supports on-the-fly format conversion and dequantization.
+
+### `visualize()`
+Generates comprehensive performance reports (HTML) for the last inference session on the PC.
+
+---
+
+## 🔍 Advanced Features & Insights
+
+### 1. Layer-wise Visualization
+Using `amlnn.visualize()`, developers can inspect:
+- `hard_op_chart.html`: Hardware-accelerated operators.
+- `soft_op_chart.html`: CPU fallback operators.
+- `dram_rd/wr_chart.html`: Memory bandwidth analysis.
+- `pie_charts_distribution.html`: Overall time distribution.
+
+<div align="center">
+  <img src="../assets/image-20251219144855741.png" width="48%" alt="Hard OP Chart" style="border-radius: 8px; margin-right: 2%;">
+  <img src="../assets/image-20251219145742364.png" width="48%" alt="Netron OP ID Mapping" style="border-radius: 8px;">
+</div>
+
+### 2. NPU Utilization Monitoring
+Use the provided `NPU_utilization.py` script to monitor hardware load in real-time during heavy inference tasks.
+
+```bash
+python NPU_utilization.py
 ```
 
-This demo uses all images in `01_export_model` as test input. To test your own images, place them in `01_export_model` or modify the demo logic.
+<div align="center">
+  <img src="../assets/wps3.jpg" width="80%" alt="NPU Utilization Monitor" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+</div>
 
+---
 
+## 🛠 FAQ
+
+- **Data Formats**: Native NPU format is NHWC. Use `inference(..., inputs_data_format='NCHW')` if your pre-processing yields NCHW; the toolkit handles the conversion efficiently.
+- **Debugging**: For verbose logs, set `export NN_SERVER_LOG_LEVEL=4` (on board) and `loglevel='DEBUG'` in `config()`.

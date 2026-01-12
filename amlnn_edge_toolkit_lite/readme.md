@@ -119,8 +119,8 @@ Using `amlnn.visualize()`, developers can inspect:
 - `pie_charts_distribution.html`: Overall time distribution.
 
 <div align="center">
-  <img src="readme.assets/image-20251219144855741.png" width="48%" alt="Hard OP Chart" style="border-radius: 8px; margin-right: 2%;">
-  <img src="readme.assets/image-20251219145742364.png" width="48%" alt="Netron OP ID Mapping" style="border-radius: 8px;">
+  <img src="../assets/image-20251219144855741.png" width="48%" alt="Hard OP Chart" style="border-radius: 8px; margin-right: 2%;">
+  <img src="../assets/image-20251219145742364.png" width="48%" alt="Netron OP ID Mapping" style="border-radius: 8px;">
 </div>
 
 
@@ -132,7 +132,7 @@ python NPU_utilization.py
 ```
 
 <div align="center">
-  <img src="readme.assets/wps3.jpg" width="80%" alt="NPU Utilization Monitor" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+  <img src="../assets/wps3.jpg" width="80%" alt="NPU Utilization Monitor" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
 </div>
 
 
