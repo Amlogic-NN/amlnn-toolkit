@@ -1,5 +1,7 @@
 # AMLNN: Amlogic Edge AI Inference Toolkit (Python) - PC Host
 
+![python-runtime-pc](../assets/python-runtime-pc.png)
+
 This repository provides instructions for setting up the **Amlogic Python Runtime** environment on a PC Host and running demo models on Amlogic platforms via ADB. It abstracts complex interactions into a streamlined workflow, enabling rapid deployment and testing from your development machine.
 
 ## 🚀 Key Features
