@@ -117,17 +117,21 @@ Using `amlnn.visualize()`, developers can inspect:
 - `soft_op_chart.html`: CPU fallback operators.
 - `dram_rd/wr_chart.html`: Memory bandwidth analysis.
 - `pie_charts_distribution.html`: Overall time distribution.
-
+![hard_op_chart](readme.assets/image-20251219144855741.png)
+![netron_op_id](readme.assets/image-20251219145742364.png)
 > [!TIP]
 > Enable metadata mapping to original TFLite layers by setting `export ADLA_DUMP_MODEL_INFO=True` before model conversion.
 
 ### 2. NPU Utilization Monitoring
 Use the provided `NPU_utilization.py` script to monitor hardware load in real-time during heavy inference tasks.
+
 ```bash
 python NPU_utilization.py
 ```
 
----
+![NPU Utilization](readme.assets/wps3.jpg)
+
+
 
 ## 🛠 FAQ
 
