@@ -9,7 +9,7 @@ Welcome to the **Amlogic Neural Network Toolkit** monorepo. This repository serv
 | **[adla_toolkit](adla_toolkit/readme.md)** | **PC Host Full Toolkit** (All-in-One). A comprehensive package that includes Model Import, Quantization, Compilation (to ADLA), PC-based Simulation, and Remote Inference on connected boards. | Algorithm Engineers, Deployment Engineers |
 | **[amlnn_edge_toolkit_lite](amlnn_edge_toolkit_lite/readme.md)** | **Edge Board Python Runtime**. A lightweight Python SDK designed to run directly on the Amlogic board (Ubuntu/Debian). Optimized for deployment and production inference. | Embedded Engineers, App Developers |
 | **[npu_runtime](npu_runtime/)** | **C/C++ SDKs**. Contains the core libraries for native application development.<br>- `nnsdk`: Standard Neural Network SDK.<br>- `llmsdk`: SDK specialized for Large Language Models. | System Integrators, C++ Developers |
-| **[example](example/)** | **Model Zoo & Examples**. A collection of verified model implementations (MobileNet, YOLO, ResNet, etc.) with scripts and pre-trained weights. | All Developers |
+| **[example](example/)** | **Model Zoo & Examples**. A collection of verified model implementations (MobileNet, YOLO, ResNet, etc.) with scripts. | All Developers |
 
 ## 🚀 Which Tool Should I Use?
 
