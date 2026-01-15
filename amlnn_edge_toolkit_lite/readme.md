@@ -1,6 +1,10 @@
-# AMLNNLite: Amlogic Edge AI Inference Toolkit (Python)
+# AMLNNLite & AMLLM: Amlogic Edge AI Inference Toolkits (Python)
 
-AMLNNLite is a high-performance, developer-friendly Python toolkit designed for neural network inference on Amlogic NPU platforms. It abstracts complex C-based SDK interfaces into a streamlined Pythonic API, enabling rapid deployment, performance profiling, and model optimization in edge Ubuntu environments.
+This repository provides high-performance, developer-friendly Python toolkits for neural network inference on Amlogic NPU platforms:
+- **AMLNNLite**: Specialized for Computer Vision (CV) models.
+- **AMLLM**: Specialized for Large Language Models (LLM).
+
+These toolkits abstract complex C-based SDK interfaces into streamlined Pythonic APIs, enabling rapid deployment, performance profiling, and model optimization in edge Ubuntu environments.
 
 
 ## 🚀 Key Features
@@ -24,39 +28,51 @@ Accelerate your development with our curated list of model implementations:
 | **YOLOWorld** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-model-playground/tree/main/examples/yoloworld/py) |
 | **YOLOX** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-model-playground/tree/main/examples/yolox/py) |
 | **RetinaFace** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-model-playground/tree/main/examples/retinaface/py) |
+| **LLMs (Qwen/Gemma/Llama)** | [View on GitHub](https://github.com/Amlogic-NN/amlnn-model-playground/tree/main/examples/LLMs/python) |
 
 ---
 
-## 💻 Environment Setup
+### 💻 Environment Setup
 
-### Prerequisites
+#### 1. Prerequisites
 - **OS**: Ubuntu 22.04 (aarch64)
 - **Python**: 3.10
 - **NPU Driver**: Version 1.7.x or higher
 
-### Installation
+#### 2. Verify NPU Driver
+Run the following commands on the board:
+```bash
+dmesg | grep adla
+strings /usr/lib/libadla.so | grep LIBADLA
+```
+*Note: Driver version must be 1.7.x or higher.*
 
-1. **Verify NPU Driver**:
-   ```bash
-   dmesg | grep adla
-   strings /usr/lib/libadla.so | grep LIBADLA
-   ```
+#### 3. Initialize Python Environment (Recommended: Miniforge)
+```bash
+# Install Miniforge if needed
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh
+bash Miniforge3-Linux-aarch64.sh
 
-2. **Initialize Environment (Recommended: Miniforge)**:
-   ```bash
-   conda create -n amlnn_dev python=3.10 -y
-   conda activate amlnn_dev
-   ```
+# Create and activate environment
+conda create -n amlnn_dev python=3.10 -y
+conda activate amlnn_dev
+```
 
-3. **Install Toolkit**:
-   ```bash
-   pip install amlnnlite-x.x.x-cp310-cp310-linux_aarch64.whl
-   ```
+#### 4. Install Toolkits
+Depending on your needs, install the appropriate `.whl` package:
+```bash
+# For Vision models (CV)
+pip install amlnnlite-x.x.x-cp310-cp310-linux_aarch64.whl
+
+# For Large Language Models (LLM)
+pip install amlllm-x.x.x-cp310-cp310-linux_aarch64.whl
+```
 
 ---
 
 ## ⚡ Quick Start
 
+### 1. Vision Models (AMLNNLite)
 Incorporate NPU inference into your Python application in just a few lines:
 
 ```python
@@ -83,51 +99,87 @@ amlnn.visualize()
 amlnn.uninit()
 ```
 
+### 2. Large Language Models (AMLLM)
+Sample script for interactive LLM chat:
+
+```python
+from amlllm.api import AMLLLM
+
+# 1. Initialize
+amlllm = AMLLLM()
+
+# 2. Configure
+amlllm.config(
+    model_path="qwen2.5_0.5b.adla",
+    tokenizer_path="tokenizer.json",
+    sampling_mode="argmax",
+    loglevel="INFO"
+)
+
+# 3. Setup Engine
+amlllm.init()
+
+# 4. Perform Inference (Chat)
+result = amlllm.run(prompt="Hello, who are you?", run_mode="generate")
+print(result)
+
+# 5. Cleanup
+amlllm.uninit()
+```
+
 ---
 
-## 📖 API Reference Summary
+## 📖 API Reference
 
-### `AMLNNLite()`
-Initialize the toolkit core engine.
+### 1. Vision API Summary (`AMLNNLite`)
 
-### `config(board_work_path, model_path, run_cycles=1, loglevel="ERROR")`
+#### `config(board_work_path, model_path, run_cycles=1, loglevel="ERROR")`
 Configure the runtime environment.
 - `board_work_path`: Workspace on the board.
 - `model_path`: Path to `.adla` or quantized `.tflite`.
 - `run_cycles`: Number of iterations for profiling.
 
-### `init()`
-Load the model into the NPU and allocate hardware resources.
-
-### `inference(inputs, inputs_data_format='NHWC', outputs_data_format='NHWC', dequantize_outputs=True)`
+#### `inference(inputs, inputs_data_format='NHWC', outputs_data_format='NHWC', dequantize_outputs=True)`
 Execute synchronous inference.
 - Handles padding/strips automatically.
 - Supports on-the-fly format conversion and dequantization.
 
-### `visualize()`
+#### `visualize()`
 Generates comprehensive performance reports (HTML) for the last inference session.
+
+### 2. LLM API Summary (`AMLLLM`)
+
+#### `config(model_path, tokenizer_path, sampling_mode='argmax', top_k=50, top_p=0.9, temperature=1.0, repeat_penalty=1.1, loglevel='ERROR', on_token=None)`
+Configure the LLM runtime.
+- `on_token`: Optional callback function for streaming output.
+
+#### `run(prompt, input_type='prompt', run_mode='generate', retain_history=False, user_data=None)`
+Execute LLM inference.
+- `retain_history`: Set to `True` for multi-turn conversations.
+
+#### `reset_session()`
+Clear conversation history and reset context.
+
+#### `set_chat_template(system_prompt, prompt_prefix, prompt_postfix)`
+Configure the chat template (System prompt, prefixes, and suffixes).
 
 ---
 
 ## 🔍 Advanced Features & Insights
 
-
-### 1. Layer-wise Visualization
+### 1. Vision Layer-wise Visualization
 Using `amlnn.visualize()`, developers can inspect:
-- `hard_op_chart.html`: Hardware-accelerated operators.
-- `soft_op_chart.html`: CPU fallback operators.
-- `dram_rd/wr_chart.html`: Memory bandwidth analysis.
-- `pie_charts_distribution.html`: Overall time distribution.
+- Hardware-accelerated operators (`hard_op_chart.html`)
+- CPU fallback operators (`soft_op_chart.html`)
+- Memory bandwidth and time distribution.
 
 <div align="center">
   <img src="../assets/image-20251219144855741.png" width="48%" alt="Hard OP Chart" style="border-radius: 8px; margin-right: 2%;">
   <img src="../assets/image-20251219145742364.png" width="48%" alt="Netron OP ID Mapping" style="border-radius: 8px;">
 </div>
 
-
 ### 2. NPU Utilization Monitoring
-Use the provided `NPU_utilization.py` script to monitor hardware load in real-time during heavy inference tasks.
-
+Monitor hardware load in real-time during heavy inference tasks:
 ```bash
 python NPU_utilization.py
 ```
@@ -136,10 +188,12 @@ python NPU_utilization.py
   <img src="../assets/wps3.jpg" width="80%" alt="NPU Utilization Monitor" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
 </div>
 
+---
 
+## 🛠 FAQ & Troubleshooting
 
-
-## 🛠 FAQ
-
-- **Data Formats**: Native NPU format is NHWC. Use `inference(..., inputs_data_format='NCHW')` if your pre-processing yields NCHW; the toolkit handles the conversion efficiently.
-- **Debugging**: For verbose logs, set `export NN_SERVER_LOG_LEVEL=4` and `loglevel='DEBUG'` in `config()`.
+- **Data Formats (Vision)**: Native NPU format is NHWC. The toolkit handles NCHW ↔ NHWC conversion automatically.
+- **Debugging**: 
+  - For **Vision**: Set `export NN_SERVER_LOG_LEVEL=4` and `loglevel='DEBUG'`.
+  - For **LLM**: Set `export LLM_SDK_LOG_LEVEL=4` and `loglevel='DEBUG'`.
+- **Model Conversion**: Please refer to the **LLM Conversion User Guide** for detailed model quantization and deployment steps.
