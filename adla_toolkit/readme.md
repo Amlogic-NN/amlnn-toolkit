@@ -50,6 +50,7 @@ Accelerate your development with our curated list of model implementations:
 
 2. **Verify NPU Driver** (on Target Device):
    Check the NPU driver version on the target device to determine the correct package.
+   The driver version must be 1.7.x or higher.
    ```bash
    # Android
    adb shell "dmesg | grep adla"
@@ -60,7 +61,7 @@ Accelerate your development with our curated list of model implementations:
    adb shell "strings /usr/lib/libadla.so | grep LIBADLA"
    ```
 
-3. **Initialize Environment (Recommended: Miniforge)**:
+4. **Initialize Environment (Recommended: Miniforge)**:
    ```bash
    # Install Miniforge if needed
    wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
@@ -71,13 +72,13 @@ Accelerate your development with our curated list of model implementations:
    conda activate nnserver_310
    ```
 
-4. **Install Python Wheel and Dependencies**:
+5. **Install Python Wheel and Dependencies**:
    ```bash
    pip install amlnn-xxx.whl
    pip install -r requirements.txt
    ```
 
-5. **Deploy nnserver to Target**:
+6. **Deploy nnserver to Target**:
    Push the `nnserver` executable matching your target platform (Android/Linux, 32/64-bit) to the device.
    
    **Android**:
