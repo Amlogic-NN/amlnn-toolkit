@@ -50,7 +50,7 @@ Accelerate your development with our curated list of model implementations:
 
 2. **Verify NPU Driver** (on Target Device):
    Check the NPU driver version on the target device to determine the correct package.
-   The driver version must be 1.7.x or higher.
+   The driver version must be 1.7.1.x.x.x or higher.
    ```bash
    # Android
    adb shell "dmesg | grep adla"
