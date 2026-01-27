@@ -116,7 +116,7 @@ adb shell
 
 You should see output indicating it is listening on ports (e.g., 8308, 8309, 8310).
 
-### 2. Run Python Inference (on PC)
+### 2. Run Python Inference script (on PC) to delegate infrence task to board
 Run the example script on your PC. It will communicate with `nnserver` on the board.
 
 ```bash
