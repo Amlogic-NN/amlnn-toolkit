@@ -84,14 +84,14 @@ Accelerate your development with our curated list of model implementations:
    **Android**:
    ```bash
    adb root
-   adb push nnserver/arm64-v8a/nnserver /data/local/tmp/nnserver
-   adb shell "chmod +x /data/local/tmp/nnserver"
+   adb push nnserver/arm64-v8a/nnserver /data/nn
+   adb shell "chmod +x /data/nn/nnserver"
    ```
    
    **Linux / Yocto**:
    ```bash
-   adb push nnserver/aarch64-poky-linux/nnserver /usr/bin/nnserver
-   adb shell "chmod +x /usr/bin/nnserver"
+   adb push nnserver/aarch64-poky-linux/nnserver /data/nn/nnserver
+   adb shell "chmod +x /data/nn/nnserver"
    ```
 
 ---
@@ -104,7 +104,7 @@ Open a **new terminal** and start `nnserver` on the device.
 **Android**:
 ```bash
 adb shell
-cd /data/local/tmp
+cd /data/nn
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/vendor/lib64
 ./nnserver
 ```
@@ -124,10 +124,7 @@ Run the example script on your PC. It will communicate with `nnserver` on the bo
 cd example/mobilenetv2/02_verify_python
 
 python mobilenetv2.py \
-    --board-work-path /usr/bin \
-    --model-path ../01_export_model/mobilenet_v2_1.0_224_quant.adla \
-    --run-cycles 1 \
-    --loglevel INFO
+    --model-path ../01_export_model/mobilenet_v2_1.0_224_quant_xxx.adla # Choose the correct model path based on the platform type.
 ```
 
 Upon successful execution, you will see hardware platform info, input/output tensors, NPU latency, and bandwidth usage.
