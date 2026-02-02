@@ -75,7 +75,6 @@ Accelerate your development with our curated list of model implementations:
 5. **Install Python Wheel and Dependencies**:
    ```bash
    pip install amlnn-xxx.whl
-   pip install -r requirements.txt
    ```
 
 6. **Deploy nnserver to Target**:
