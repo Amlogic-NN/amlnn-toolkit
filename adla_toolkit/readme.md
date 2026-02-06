@@ -56,7 +56,7 @@ Accelerate your development with our curated list of model implementations:
    adb shell "dmesg | grep adla"
    adb shell "strings /vendor/lib64/libadla.so | grep LIBADLA"
    
-   # Linux / Yocto
+   # Linux (Buildroot / Yocto)
    adb shell "dmesg | grep adla"
    adb shell "strings /usr/lib/libadla.so | grep LIBADLA"
    ```
@@ -81,15 +81,19 @@ Accelerate your development with our curated list of model implementations:
    Push the `nnserver` executable matching your target platform (Android/Linux, 32/64-bit) to the device.
    
    **Android**:
+   
    ```bash
+   # Using Android64 bit as an example
    adb root
-   adb push nnserver/arm64-v8a/nnserver /data/nn
+   adb push Android/arm64-v8a/nnserver /data/nn
    adb shell "chmod +x /data/nn/nnserver"
    ```
    
-   **Linux / Yocto**:
+   **Linux (Buildroot / Yocto) **:
+   
    ```bash
-   adb push nnserver/aarch64-poky-linux/nnserver /data/nn/nnserver
+   # Using Yocto64 bit as an example
+   adb push Linux/aarch64-poky-linux/nnserver /data/nn/nnserver
    adb shell "chmod +x /data/nn/nnserver"
    ```
 
@@ -108,9 +112,11 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/vendor/lib64
 ./nnserver
 ```
 
-**Linux / Yocto**:
+**Linux  (Buildroot / Yocto)**:
+
 ```bash
 adb shell
+cd /data/nn
 ./nnserver
 ```
 
