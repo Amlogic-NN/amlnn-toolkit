@@ -85,7 +85,7 @@ Accelerate your development with our curated list of model implementations:
    ```bash
    # Using Android64 bit as an example
    adb root
-   adb push Android/arm64-v8a/nnserver /data/nn
+   adb push android/arm64-v8a/nnserver /data/nn
    adb shell "chmod +x /data/nn/nnserver"
    ```
    
@@ -93,7 +93,7 @@ Accelerate your development with our curated list of model implementations:
    
    ```bash
    # Using Yocto64 bit as an example
-   adb push Linux/aarch64-poky-linux/nnserver /data/nn/nnserver
+   adb push linux/aarch64-poky-linux/nnserver /data/nn/nnserver
    adb shell "chmod +x /data/nn/nnserver"
    ```
 
