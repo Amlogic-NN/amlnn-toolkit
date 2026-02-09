@@ -12,7 +12,7 @@ import os
 import glob
 import argparse
 from PIL import Image
-from amlnnlite.api import AMLNNLite
+from amlnn.api import AMLNN
 
 
 def preprocess(image_path: str) -> np.ndarray:
@@ -78,7 +78,7 @@ def main():
     args = parser.parse_args()
     
     # Initialize AMLNNLite
-    amlnn = AMLNNLite()
+    amlnn = AMLNN()
     amlnn.config(
         model_path=args.model_path           # Model file path, Support ADLD and quantized TFlite models
     )
