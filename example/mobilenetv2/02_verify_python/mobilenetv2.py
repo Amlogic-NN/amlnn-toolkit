@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-MobileNetV2 Quantized Inference Demo with AMLNNLite
-Author: xinxin.he
+MobileNetV2 Quantized Inference Demo with AMLNN
 Description:
     This script demonstrates how to perform image classification
-    using a quantized MobileNetV2 (224x224) model with AMLNNLite.
+    using a quantized MobileNetV2 (224x224) model with AMLNN.
 """
 
 import numpy as np
@@ -74,13 +73,13 @@ def postprocess_topk(predictions: np.ndarray, labels_path: str, k: int = 5) -> N
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model-path', default='../01_export_model/mobilenet_v2_1.0_224_quant.tflite')
+    parser.add_argument('--model-path', default='../01_export_model/mobilenet_v2_1.0_224_quant_S905X5.adla')
     args = parser.parse_args()
     
-    # Initialize AMLNNLite
+    # Initialize AMLNN
     amlnn = AMLNN()
     amlnn.config(
-        model_path=args.model_path           # Model file path, Support ADLD and quantized TFlite models
+        model_path=args.model_path           # Model file path, Support ADLD and quantized models
     )
     amlnn.init()
 
