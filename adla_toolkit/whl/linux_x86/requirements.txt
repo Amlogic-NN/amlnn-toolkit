@@ -1,0 +1,7 @@
+# base
+numpy==1.24.4
+easydict==1.13
+plotly==5.22.0
+
+# for demo
+Pillow==10.3.0
