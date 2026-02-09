@@ -74,6 +74,7 @@ Accelerate your development with our curated list of model implementations:
 
 5. **Install Python Wheel and Dependencies**:
    ```bash
+   pip install -r requirements.txt
    pip install amlnn-1.0.0-cp310-cp310-linux_x86_64.whl
    ```
 
