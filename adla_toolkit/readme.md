@@ -86,6 +86,7 @@ Accelerate your development with our curated list of model implementations:
    ```bash
    # Using Android64 bit as an example
    adb root
+   adb shell "mkdir -p /data/nn"
    adb push android/arm64-v8a/nnserver /data/nn
    adb shell "chmod +x /data/nn/nnserver"
    ```
