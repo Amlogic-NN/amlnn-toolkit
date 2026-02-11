@@ -95,6 +95,7 @@ Accelerate your development with our curated list of model implementations:
    
    ```bash
    # Using Yocto64 bit as an example
+   adb shell "mkdir -p /data/nn"
    adb push linux/aarch64-poky-linux/nnserver /data/nn/nnserver
    adb shell "chmod +x /data/nn/nnserver"
    ```
