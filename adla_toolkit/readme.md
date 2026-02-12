@@ -48,20 +48,52 @@ Accelerate your development with our curated list of model implementations:
    adb shell echo "Connection OK"
    ```
 
+   outputs:
+   ```bash
+   # adb devices -l
+   * daemon not running; starting now at tcp:5037
+   * daemon started successfully
+   List of devices attached an40090992a86010f06  device product:t7_an400 model:t7_an400 device:t7_an400 transport_id:1
+
+   # adb shell echo "Connection OK"
+   Connection OK
+   ```
+
 2. **Verify NPU Driver** (on Target Device):
    Check the NPU driver version on the target device to determine the correct package.
    The driver version must be 1.7.1.x.x.x or higher.
    ```bash
    # Android
+   adb root
    adb shell "dmesg | grep adla"
    adb shell "strings /vendor/lib64/libadla.so | grep LIBADLA"
    
    # Linux (Buildroot / Yocto)
+   adb root
    adb shell "dmesg | grep adla"
    adb shell "strings /usr/lib/libadla.so | grep LIBADLA"
    ```
-   ![kmd_version](../assets/kmdversion.png)  
-   > [!IMPORTANT]
+   
+   outputs:
+   ```bash
+   # adb shell "dmesg | grep adla"
+   [    4.985589] [ADLAK WARN] adlak_axi_sram_init() adlak_smc_cmd: 0x0
+   [    4.985625] adla kmd version: 1.7.1.1.1
+   [    4.985632] [ADLAK WARN] adlak_platform_set_power() adla power on
+   [    4.985637] [ADLAK WARN] adlak_platform_set_clock() clk_set_parent to parent 0
+   [    4.996630] [ADLAK WARN] adlak_dev_inference_cb() dpm_timer_period: 300
+   [    4.996685] [ADLAK WARN] adlak_platform_set_clock() clk_set_parent to parent 1
+   [    4.996693] [ADLAK WARN] adlak_platform_set_power() adla power off
+   [    4.996722] [ADLAK WARN] adlak_platform_set_power() adla power on
+   [    4.996899] [ADLAK WARN] adlak_platform_set_clock() clk_set_parent to parent 0
+   [    8.511273] [ADLAK WARN] adlak_platform_set_clock() clk_set_parent to parent 1
+   [    8.511285] [ADLAK WARN] adlak_platform_set_power() adla power off
+
+   # adb shell "strings /vendor/lib64/libadla.so | grep LIBADLA"
+   LIBADLA, v1.7.1.1.1.2, 2025.07
+   ```
+
+   > <font color="green">**IMPORTANT**</font>
    > If the versions are mismatched, you will need to re-burn the device with the latest image file. If you don't have the image file, please contact FAE or after-sales to obtain the latest image file.  
    > [Amlogic Image Burning Guide](https://androidmtk.com/download-amlogic-usb-burning-tool)  
    > [Android 64bit Image for A311D2](https://xtom-upload.crh98106.workers.dev/Share/t7_an400_arm64-aml_upgrade_img-20260129-15579.tar.bz2)  
@@ -88,38 +120,51 @@ Accelerate your development with our curated list of model implementations:
    Push the `nnserver` executable matching your target platform (Android/Linux, 32/64-bit) to the device.
    
    **Android**:
-   
    ```bash
-   # Using Android64 bit as an example
    adb root
    adb shell "mkdir -p /data/nn"
-   adb push android/arm64-v8a/nnserver /data/nn
+   adb push nnserver/android/arm64-v8a/nnserver /data/nn/nnserver
    adb shell "chmod +x /data/nn/nnserver"
+
+   # start nnserver
+   adb shell "/data/nn/nnserver &"
+
+   # Check if process is running
+   adb shell "ps -A | grep nnserver"
    ```
    
-   **Linux (Buildroot / Yocto) **:
-   
+   **Linux**:
    ```bash
-   # Using Yocto64 bit as an example
+   adb root
    adb shell "mkdir -p /data/nn"
-   adb push linux/aarch64-poky-linux/nnserver /data/nn/nnserver
+   adb push nnserver/linux/aarch64-poky-linux/nnserver /data/nn/nnserver
    adb shell "chmod +x /data/nn/nnserver"
+
+   # start nnserver
+   adb shell "/data/nn/nnserver &"
+
+   # Check if process is running
+   adb shell "ps -A | grep nnserver"
+   ```
+   
+   outputs:
+   ```bash
+   # adb shell "ps -A | grep nnserver"
+   root          2558     1   10834704   2708 futex_wait_queue_me 0 S nnserver
    ```
 
----
+   If started repeatedly, it will report a bind error.
+   ```bash
+   adb shell "/data/nn/nnserver &"
+   bind() error
+   bind() error
+   NNSERVER, v1.0.0, 2025.12
+   bind() error
+   ```
 
 ## ⚡ Quick Start
 
-### 1. Start nnserver on Device
-start `nnserver` on the device.
-
-```bash
-adb shell "/data/nn/nnserver &"
-```
-
-You should see output indicating it is listening on ports (e.g., 8308, 8309, 8310).
-
-### 2. Run Python Inference script (on PC) to delegate infrence task to board
+### 1. Run Python Inference script (on PC) to delegate infrence task to board
 Run the example script on your PC. It will communicate with `nnserver` on the board.
 
 ```bash
