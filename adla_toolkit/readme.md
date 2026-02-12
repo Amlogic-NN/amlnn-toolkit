@@ -60,6 +60,12 @@ Accelerate your development with our curated list of model implementations:
    adb shell "dmesg | grep adla"
    adb shell "strings /usr/lib/libadla.so | grep LIBADLA"
    ```
+   ![kmd_version](../assets/kmdversion.png)  
+   > [!IMPORTANT]
+   > If the versions are mismatched, you will need to re-burn the device with the latest image file. If you don't have the image file, please contact FAE or after-sales to obtain the latest image file.  
+   > [Amlogic Image Burning Guide](https://androidmtk.com/download-amlogic-usb-burning-tool)  
+   > [Android 64bit Image for A311D2](https://xtom-upload.crh98106.workers.dev/Share/t7_an400_arm64-aml_upgrade_img-20260129-15579.tar.bz2)  
+   > For further support, please contact the FAE or after-sales team.
 
 4. **Initialize Environment (Recommended: Miniforge)**:
    ```bash
@@ -105,22 +111,10 @@ Accelerate your development with our curated list of model implementations:
 ## ⚡ Quick Start
 
 ### 1. Start nnserver on Device
-Open a **new terminal** and start `nnserver` on the device.
-
-**Android**:
-```bash
-adb shell
-cd /data/nn
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/vendor/lib64
-./nnserver
-```
-
-**Linux  (Buildroot / Yocto)**:
+start `nnserver` on the device.
 
 ```bash
-adb shell
-cd /data/nn
-./nnserver
+adb shell "/data/nn/nnserver &"
 ```
 
 You should see output indicating it is listening on ports (e.g., 8308, 8309, 8310).
