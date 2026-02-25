@@ -112,8 +112,21 @@ Accelerate your development with our curated list of model implementations:
 
 5. **Install Python Wheel and Dependencies**:
    ```bash
-   pip install -r requirements.txt
-   pip install amlnn-1.0.0-cp310-cp310-linux_x86_64.whl
+   pip install -r whl/linux_x86/requirements.txt
+   pip install whl/linux_x86/amlnn-1.0.0-cp310-cp310-linux_x86_64.whl
+   ```
+
+   outputs:
+   ```bash
+   (nnserver_310) amlogic-Precision-3660:/data/modelzoo/amlnn-toolkit/adla_toolkit$ pip install whl/linux_x86/amlnn-1.0.0-cp310-cp310-linux_x86_64.whl
+   Processing ./whl/linux_x86/amlnn-1.0.0-cp310-cp310-linux_x86_64.whl
+   Requirement already satisfied: numpy==1.24.4 in /data/miniforge3/envs/nnserver_310/lib/python3.10/site-packages (from amlnn==1.0.0) (1.24.4)
+   Requirement already satisfied: easydict==1.13 in /data/miniforge3/envs/nnserver_310/lib/python3.10/site-packages (from amlnn==1.0.0) (1.13)
+   Requirement already satisfied: plotly==5.22.0 in /data/miniforge3/envs/nnserver_310/lib/python3.10/site-packages (from amlnn==1.0.0) (5.22.0)
+   Requirement already satisfied: tenacity>=6.2.0 in /data/miniforge3/envs/nnserver_310/lib/python3.10/site-packages (from plotly==5.22.0->amlnn==1.0.0) (9.1.4)
+   Requirement already satisfied: packaging in /data/miniforge3/envs/nnserver_310/lib/python3.10/site-packages (from plotly==5.22.0->amlnn==1.0.0) (26.0)
+     Installing collected packages: amlnn
+   Successfully installed amlnn-1.0.0 
    ```
 
 6. **Deploy nnserver to Target**:
