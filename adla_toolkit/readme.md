@@ -232,6 +232,11 @@ Using `amlnn.visualize()`, developers can inspect:
 ### 2. NPU Utilization Monitoring
 Use the provided `NPU_utilization.py` script to monitor NNcore utilization.
 
+Utilization Formula:
+```
+Utilization = (sum_mac × FPS) / NPU_TOPS
+```
+Run Script:
 ```bash
 python NPU_utilization.py
 ```
