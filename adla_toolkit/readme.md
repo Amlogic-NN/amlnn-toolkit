@@ -242,7 +242,7 @@ python NPU_utilization.py
 ```
 
 <div align="center">
-  <img src="../assets/wps3.jpg" width="80%" alt="NPU Utilization Monitor" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+  <img src="../assets/npu-utilization.png" width="80%" alt="NPU Utilization Monitor" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
 </div>
 
 ---
