@@ -230,7 +230,7 @@ Using `amlnn.visualize()`, developers can inspect:
 </div>
 
 ### 2. NPU Utilization Monitoring
-Use the provided `NPU_utilization.py` script to monitor hardware load in real-time during heavy inference tasks.
+Use the provided `NPU_utilization.py` script to monitor NNcore utilization.
 
 ```bash
 python NPU_utilization.py
