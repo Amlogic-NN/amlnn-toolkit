@@ -140,6 +140,7 @@ Accelerate your development with our curated list of model implementations:
    adb shell "chmod +x /data/nn/nnserver"
 
    # start nnserver
+   adb shell " export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/vendor/lib64"
    adb shell "/data/nn/nnserver &"
 
    # Check if process is running
@@ -154,6 +155,7 @@ Accelerate your development with our curated list of model implementations:
    adb shell "chmod +x /data/nn/nnserver"
 
    # start nnserver
+   adb shell " export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib"
    adb shell "/data/nn/nnserver &"
 
    # Check if process is running
