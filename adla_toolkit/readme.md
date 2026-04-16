@@ -1,4 +1,4 @@
-# Amlogic Edge AI Inference Toolkit (Python)
+# Amlogic AI Python Toolkit
 
 This repository provides instructions for setting up the Amlogic Python Runtime environment on a host PC or a third-party ARM Ubuntu platform, and for running demo models on Amlogic devices via ADB. It simplifies the overall workflow by abstracting low-level interactions, enabling rapid deployment, validation, and testing directly from the development environment.
 
