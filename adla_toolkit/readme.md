@@ -1,18 +1,16 @@
-# AMLNN: Amlogic Edge AI Inference Toolkit (Python) - PC Host
+# Amlogic Edge AI Inference Toolkit (Python)
 
-![python-runtime-pc](../assets/host-device.png)
+This repository provides instructions for setting up the Amlogic Python Runtime environment on a host PC or a third-party ARM Ubuntu platform, and for running demo models on Amlogic devices via ADB. It simplifies the overall workflow by abstracting low-level interactions, enabling rapid deployment, validation, and testing directly from the development environment.
 
-This repository provides instructions for setting up the **Amlogic Python Runtime** environment on a PC Host and running demo models on Amlogic platforms via ADB. It abstracts complex interactions into a streamlined workflow, enabling rapid deployment and testing from your development machine.
+![python-runtime-pc](../assets/host-device2.png)
 
-This board-connected inference workflow uses the host x86 PC(or 3rd party arm ubuntu environment) as the controller, while the actual model execution runs on the Amlogic device with the NPU.
-The Python SDK on the host side is responsible for preparing inputs, pushing model/input files to the device through ADB, and triggering inference commands remotely. On the device side,  “nnserver” loads the compiled ".adla" model and runs inference on the NPU. After execution, the inference results and performance metrics are pulled back to the host through ADB for analysis.
+In this board-connected inference workflow, the host x86 PC or third-party ARM Ubuntu system acts as the controller, while the actual model execution runs on the Amlogic device’s NPU. The Python SDK on the host side is responsible for preparing inputs, pushing model and input files to the device through ADB, and remotely triggering inference commands. On the device side, nnserver loads the compiled .adla model and executes inference on the NPU. After execution, the inference results and performance metrics are pulled back to the host through ADB for further analysis.
 
 ## 🚀 Key Features
 
 - **Developer-Centric API**: Simplified workflow for model loading, configuration, and inference.
 - **Remote Execution**: Run Python scripts on your PC that execute inference on the connected Amlogic board via ADB.
 - **Deep Profiling**: Built-in visualization tools for layer-wise latency, bandwidth consumption, and NPU utilization.
-- **Flexible Data Handling**: Automatic handling of data format conversions (NCHW ↔ NHWC) and dequantization.
 
 ---
 
