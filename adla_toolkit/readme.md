@@ -4,6 +4,9 @@
 
 This repository provides instructions for setting up the **Amlogic Python Runtime** environment on a PC Host and running demo models on Amlogic platforms via ADB. It abstracts complex interactions into a streamlined workflow, enabling rapid deployment and testing from your development machine.
 
+This board-connected inference workflow uses the host x86 PC(or 3rd party arm ubuntu environment) as the controller, while the actual model execution runs on the Amlogic device with the NPU.
+The Python SDK on the host side is responsible for preparing inputs, pushing model/input files to the device through ADB, and triggering inference commands remotely. On the device side,  “nnserver” loads the compiled ".adla" model and runs inference on the NPU. After execution, the inference results and performance metrics are pulled back to the host through ADB for analysis.
+
 ## 🚀 Key Features
 
 - **Developer-Centric API**: Simplified workflow for model loading, configuration, and inference.
