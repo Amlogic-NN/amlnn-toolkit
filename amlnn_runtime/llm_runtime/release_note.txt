@@ -1,0 +1,28 @@
+##########################################################
+Release notes for llmsdk_v1.1.0, 2026.05
+
+Change Lists:
+
+New Feature:
+    1. migrated to the new API and replaced static linking with dlopen
+    2. support Yocto environment
+    3. removed tokenizer.json
+    4. add enable_think configuration option
+    5. support InternVL and MiniCPM4 models
+    6. support driver v2.0.2.0.0.0
+    7. improved logging; Android now outputs logs through logcat
+    8. optimized the post-processing logic for arg_max, topk, and top
+
+Solve bugs:
+
+##########################################################
+Release notes for llmsdk_v1.0.0, 2025.07
+
+Change Lists:
+
+New Feature:
+    1. initial version
+
+Solve bugs:
+
+##########################################################

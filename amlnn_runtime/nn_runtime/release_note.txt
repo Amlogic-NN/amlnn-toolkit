@@ -1,0 +1,30 @@
+##########################################################
+Release notes for nnsdk2_v1.0.0, nnsdk1_v3.0.0, 2026.05
+
+Change Lists:
+
+New Feature:
+    1. [nnsdk1] upgraded compiler to v0.10.13
+    2. [nnsdk1] support driver v2.0.2.0.0.0
+    3. [nnsdk1] adapt C4 C5 A9 chip
+    4. [nnsdk2] add query and set npu core functionality
+    5. [nnsdk2] support model task priority functionality
+    6. [nnsdk2] support gpu and cpu delegate
+    7. [nnsdk1&nnsdk2] support fp16_to_fp32 dequant
+
+Solve bugs:
+
+##########################################################
+Release notes for nnsdk2_v1.0.0_beta, nnsdk1_v3.0.0_beta, 2026.03
+
+Change Lists:
+
+New Feature:
+    1. reconstruct nnsdk1
+    2. develop nnsdk2
+    3. support driver v1.7.1.3.5.2
+    4. nnsdk2 and adla are decoupled (through a bridging layer)
+
+Solve bugs:
+
+##########################################################

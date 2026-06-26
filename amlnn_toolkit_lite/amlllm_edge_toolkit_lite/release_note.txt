@@ -1,0 +1,21 @@
+##########################################################
+Release notes for amllite_v1.1.0, 2026.05
+
+Change Lists:
+
+New Feature:
+    1. change AMLLM to AMLLMLite
+
+Solve bugs:
+
+##########################################################
+Release notes for amllite_v1.0.0, 2025.12
+
+Change Lists:
+
+New Feature:
+    1. initial version
+
+Solve bugs:
+
+##########################################################

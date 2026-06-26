@@ -1,0 +1,4 @@
+easydict==1.13
+numpy==1.24.4
+plotly==5.22.0
+pillow==12.2.0

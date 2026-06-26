@@ -1,0 +1,14 @@
+ai-edge-torch==0.7.1
+opencv-python==4.12.0.88
+onnx==1.19.1
+onnxruntime
+sng4onnx
+ai_edge_litert
+onnx_graphsurgeon
+psutil
+torch==2.9.1
+plotly
+immutabledict
+onnxsim>=0.6.4
+tensorflow==2.20.0
+tf_keras==2.20.1

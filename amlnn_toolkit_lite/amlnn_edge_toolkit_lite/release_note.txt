@@ -1,0 +1,11 @@
+##########################################################
+Release notes for amlnnlite_v1.0.0, 2026.05
+
+Change Lists:
+
+New Feature:
+    1. initial version
+
+Solve bugs:
+
+##########################################################
