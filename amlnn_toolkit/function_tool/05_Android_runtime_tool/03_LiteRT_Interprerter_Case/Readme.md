@@ -7,7 +7,7 @@ Interpreter API case
 
 ```bash
 export LD_LIBRARY_PATH=/vendor/lib64
-./aml_delegate_test_bin *.tflite
+./aml_delegate_test_bin mobilenet_v2_1.0_224_quant.tflite
 ```
 
 - Example output:
@@ -43,5 +43,4 @@ Output tensor dims: 1 2535 80
 -------------- finished -------------
 7.CI test exit (skip interpreter teardown to avoid hang)
 ```
-
 

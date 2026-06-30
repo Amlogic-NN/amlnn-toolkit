@@ -13,7 +13,7 @@ ADLA Version: 2.0.2.0.0
 
 ```bash
 export LD_LIBRARY_PATH=:$(pwd)
-./aml_CompiledModel_benchmark *.tflite
+./aml_CompiledModel_benchmark mobilenet_v2_1.0_224_quant.tflite
 ```
 
 - Example output:
