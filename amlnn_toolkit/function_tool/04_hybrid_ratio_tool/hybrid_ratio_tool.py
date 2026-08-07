@@ -42,7 +42,7 @@ class aml_nn_model:
         self.input_npy_path=['yolov8n_trunc_nhwc.npy']
         self.output_npy_path=['yolov8n_trunc_nhwc_out_0.npy']
         self.activation_quant_algo=["normal",'percentile',"histogram","omse"]
-        self.weight_quant_algo =["lsq","grq"]
+        self.weight_quant_algo =["lsq","decoupleQ"]
         self.inference_input_type="float32"
         self.inference_output_type="float32"
 

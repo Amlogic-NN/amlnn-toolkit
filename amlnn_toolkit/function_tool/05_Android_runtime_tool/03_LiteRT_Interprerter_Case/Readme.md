@@ -25,7 +25,7 @@ It is recommended to check your settings when generate the model file.
 memory usage:
         model alloc from os          0x00000000,( 0.00 MByte)
         model alloc from drv         0x0085ae8c,( 8.36 MByte)
-        model addtion alloc from os  0x0004b2c0,( 0.29 MByte)
+        model addition alloc from os  0x0004b2c0,( 0.29 MByte)
 5.AML_Delegate AllocateTensors
 6.AML_Delegate set input
 6.AML_Delegate Start to do invoke
