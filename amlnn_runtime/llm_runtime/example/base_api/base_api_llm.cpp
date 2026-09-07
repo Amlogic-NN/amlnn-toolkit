@@ -46,8 +46,8 @@ void callback(AML_LLMResult *result, void *userdata, AML_LLMRunStatus run_status
             printf("[Request #%d]\n", my_data->request_id);
             my_data->printed = true;
         }
-        printf("%s", result->text);
-        // printf("%d,", result->token_id);
+        printf("%s", result->generation.text);
+        // printf("%d,", result->generation.token_id);
         fflush(stdout);
     }
     else if (run_status == AML_LLM_RUN_FINISH)
@@ -99,55 +99,44 @@ static void get_input_string_thread(LLMContext context)
 }
 
 
-enum ModelType
-{
-    QWEN,
-    DEEPSEEK,
-    GEMMA,
-    GEMMA3,
-    LLAMA,
-    TINY_LLAMA,
-    TINY_LLAMA_V0_4,
-    PHI_1_5,
-    PHI_2,
-    MINICPM4,
-    UNKNOWN
-};
-
-ModelType parse_model_type(const char* name)
-{
-    if (strcmp(name, "qwen") == 0) return QWEN;
-    if (strcmp(name, "deepseek") == 0) return DEEPSEEK;
-    if (strcmp(name, "gemma") == 0) return GEMMA;
-    if (strcmp(name, "gemma3") == 0) return GEMMA3;
-    if (strcmp(name, "llama") == 0) return LLAMA;
-    if (strcmp(name, "tiny_llama") == 0) return TINY_LLAMA;
-    if (strcmp(name, "tiny_llama_v0_4") == 0) return TINY_LLAMA_V0_4;
-    if (strcmp(name, "phi_1_5") == 0) return PHI_1_5;
-    if (strcmp(name, "phi_2") == 0) return PHI_2;
-    if (strcmp(name, "minicpm4") == 0) return MINICPM4;
-    return UNKNOWN;
-}
-
 
 int main(int argc, char **argv)
 {
-    if (argc < 2)
+    const char* model_path = NULL;
+    AML_LLMSamplingMode sampling_mode = AML_LLM_ARG_Max;
+    int retain_history = 0;
+
+    for (int i = 1; i < argc; ++i)
     {
-        printf("Usage: %s <model_path> [--model_type <type>]\n", argv[0]);
-        printf("Supported types: qwen(qwenx internvl), deepseek, gemma, gemma3, llama, tiny_llama, tiny_llama_v0_4, phi_1_5, phi_2, minicpm4\n");
-        return -1;
+        if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
+        {
+            printf("Usage: %s --model_path <path> [--sampling_mode <0|1|2>] [--retain_history <0|1>]\n", argv[0]);
+            printf("       %s <model_path>\n", argv[0]);
+            return 0;
+        }
+        else if (strcmp(argv[i], "--model_path") == 0 && i + 1 < argc)
+        {
+            model_path = argv[++i];
+        }
+        else if (strcmp(argv[i], "--sampling_mode") == 0 && i + 1 < argc)
+        {
+            sampling_mode = (AML_LLMSamplingMode)atoi(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--retain_history") == 0 && i + 1 < argc)
+        {
+            retain_history = atoi(argv[++i]);
+        }
+        else if (argv[i][0] != '-' && !model_path)
+        {
+            model_path = argv[i];
+        }
     }
 
-    const char* model_path = argv[1];
-    ModelType model_type = UNKNOWN;
-
-    for (int i = 2; i < argc - 1; i++)
+    if (!model_path)
     {
-        if (strcmp(argv[i], "--model_type") == 0)
-        {
-            model_type = parse_model_type(argv[i + 1]);
-        }
+        printf("Usage: %s --model_path <path> [--sampling_mode <0|1|2>] [--retain_history <0|1>]\n", argv[0]);
+        printf("       %s <model_path>\n", argv[0]);
+        return -1;
     }
 
     printf("\nWelcome to Amlogic LLM Demo!\n");
@@ -156,106 +145,30 @@ int main(int argc, char **argv)
     AML_LLMInitConfig init_config;
     memset(&init_config, 0, sizeof(AML_LLMInitConfig));
     init_config.model_path = model_path;
-    init_config.sampling_mode = AML_LLM_ARG_Max;
+    init_config.sampling_mode = sampling_mode;
     init_config.top_k = 3;
     init_config.top_p = 0.9f;
     init_config.temperature = 1.0f;
     init_config.repeat_penalty = 1.1f;
 
-    aml_llm_init(&context, &init_config, callback);
+    if (aml_llm_init(&context, &init_config, callback) != AML_LLM_Status_Success)
+    {
+        printf("aml_llm_init failed\n");
+        return -1;
+    }
 
     std::thread input_thread(get_input_string_thread, context);
 
     AML_LLMInput input;
     memset(&input, 0, sizeof(AML_LLMInput));
     input.input_type = AML_LLM_INPUT_PROMPT;
+    input.role = "user";
 
     AML_LLMRunConfig run_config;
     memset(&run_config, 0, sizeof(AML_LLMRunConfig));
     run_config.run_mode = AML_LLM_RUN_GENERATE;
-    run_config.retain_history = 0;
+    run_config.retain_history = retain_history;
     run_config.enable_think = 0;
-
-
-    if (model_type != UNKNOWN)
-    {
-        /*
-        Users can set the template prompt words according to their needs.
-        After setting, call aml_llm_set_chat_template api to take effect.
-        If aml_llm_set_chat_template api is not called, llmsdk will use the default template prompts words.
-        The following are the default template prompt words for various models supported.
-        */
-
-        const char* system_prompt = "";
-        const char* prompt_prefix = "";
-        const char* prompt_postfix = "";
-
-        switch (model_type)
-        {
-            case QWEN:
-                system_prompt = "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n";
-                prompt_prefix = "<|im_start|>user\n";
-                prompt_postfix = "<|im_end|>\n<|im_start|>assistant\n";
-                break;
-            case DEEPSEEK:
-                system_prompt = "<｜begin▁of▁sentence｜>";
-                prompt_prefix = "<｜User｜>";
-                prompt_postfix = "<｜Assistant｜>please don't include <think> tags in your answers\n";
-                break;
-            case GEMMA:
-            case GEMMA3:
-                system_prompt = "<bos>";
-                prompt_prefix = "<start_of_turn>user\n";
-                prompt_postfix = "<end_of_turn>\n<start_of_turn>model\n";
-                break;
-            case LLAMA:
-            {
-                static char system_prompt_buf[256];
-                std::time_t now = std::time(nullptr);
-                std::tm* local_time = std::localtime(&now);
-                char date_str[30];
-                std::strftime(date_str, sizeof(date_str), "%d %b %Y", local_time);
-                snprintf(system_prompt_buf, sizeof(system_prompt_buf),
-                    "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
-                    "Cutting Knowledge Date: December 2023\n"
-                    "Today Date: %s\n\n"
-                    "<|eot_id|>", date_str);
-                system_prompt = system_prompt_buf;
-                prompt_prefix = "<|start_header_id|>user<|end_header_id|>\n\n";
-                prompt_postfix = "<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n";
-                break;
-            }
-            case TINY_LLAMA:
-                system_prompt = "<|im_start|>system\nYou are a friendly chatbot.<|im_end|>\n";
-                prompt_prefix = "<|im_start|>user\n";
-                prompt_postfix = "<|im_end|>\n<|im_start|>assistant\n";
-                break;
-            case TINY_LLAMA_V0_4:
-                system_prompt = "<s>";
-                prompt_prefix = "<|im_start|>user\n";
-                prompt_postfix = "<|im_end|>\n<|im_start|>assistant\n";
-                break;
-            case PHI_1_5:
-                system_prompt = "";
-                prompt_prefix = "";
-                prompt_postfix = "\nAnswer:";
-                break;
-            case PHI_2:
-                system_prompt = "";
-                prompt_prefix = "Instruct: ";
-                prompt_postfix = "\nOutput:";
-                break;
-            case MINICPM4:
-                system_prompt = "";
-                prompt_prefix = "<im_start>user\n";
-                prompt_postfix = "<im_end>\n";
-                break;
-            default:
-                break;
-        }
-
-        aml_llm_set_chat_template(context, system_prompt, prompt_prefix, prompt_postfix);
-    }
 
 
     MyUserData my_data;

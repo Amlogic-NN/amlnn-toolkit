@@ -86,8 +86,8 @@ Download [android-ndk-r25c](https://github.com/android/ndk/wiki/Unsupported-Down
 
 **Linux Buildroot**
 
-- 64-bit: Download [gcc-linaro-6.3.1-2017.02-x86_64_aarch64-linux-gnu](https://releases.linaro.org/components/toolchain/binaries/6.3-2017.02/aarch64-linux-gnu/), extract to a local directory (e.g. `/opt/gcc-linaro-6.3.1-2017.02-x86_64_aarch64-linux-gnu`), then update `BUILDROOT_TOOLCHAIN_PATH` on line 4 of `build-buildroot64.sh`.
-- 32-bit: Download [gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf](https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-a/10.3-2021.07/binrel/), extract to a local directory (e.g. `/opt/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf`), then update `BUILDROOT_TOOLCHAIN_PATH` on line 4 of `build-buildroot32.sh`.
+- 64-bit: Download  [gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu](https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz), extract to a local directory (e.g. `/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu`), then update `BUILDROOT_TOOLCHAIN_PATH` on line 4 of `build-buildroot64.sh`.
+- 32-bit: Download [gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf](https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf.tar.xz), extract to a local directory (e.g. `/opt/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf`), then update `BUILDROOT_TOOLCHAIN_PATH` on line 4 of `build-buildroot32.sh`.
 
 **Linux Yocto / Debian**
 

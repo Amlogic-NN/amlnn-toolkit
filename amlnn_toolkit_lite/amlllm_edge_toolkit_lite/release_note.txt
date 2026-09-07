@@ -1,4 +1,24 @@
 ##########################################################
+Release notes for amllite_v1.2.0, 2026.08
+
+Change Lists:
+
+New Feature:
+    1. support VLM
+
+Solve bugs:
+
+##########################################################
+Release notes for amllite_v1.1.1, 2026.08
+
+Change Lists:
+
+New Feature:
+
+Solve bugs:
+    1. fix UTF-8 decoding failure when a multibyte character is split across token callbacks
+
+##########################################################
 Release notes for amllite_v1.1.0, 2026.05
 
 Change Lists:

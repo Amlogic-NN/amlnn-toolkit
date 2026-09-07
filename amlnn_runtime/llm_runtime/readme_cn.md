@@ -1,10 +1,10 @@
 # llm_runtime：Amlogic 大语言模型 C/C++ SDK
 
-`llm_runtime` 提供用于在 Amlogic NPU 平台部署**大语言模型**的 C/C++ 推理 SDK。链接 `libllmsdk.so` 并包含 `llmsdk.h` 头文件，即可在原生应用中集成 LLM 推理能力。支持 Android 和 Linux（Yocto / Debian）平台。
+`llm_runtime` 提供用于在 Amlogic NPU 平台部署**大语言模型**的 C/C++ 推理 SDK。链接 `libllmsdk.so` 并包含 `llmsdk.h` 头文件，即可在原生应用中集成 LLM 推理能力。支持 Android 和 Linux（Buildroot / Yocto / Debian）平台。
 
 ## 主要特性
 
-- **多平台支持**：Android、Linux Yocto 和 Linux Debian，含 32 位和 64 位库。
+- **多平台支持**：Android、Linux Buildroot 、Linux Yocto 和 Linux Debian，含 32 位和 64 位库。
 - **流式输出**：通过回调逐 token 实时输出。
 - **多轮对话**：支持保留对话历史。
 - **内置对话模板**：支持 Qwen、Llama、DeepSeek、Gemma 等主流模型。
@@ -16,6 +16,7 @@
 | 平台 | lib64 | lib32 |
 | :--- | :---: | :---: |
 | Android | ✓ | ✓ |
+| Linux Buildroot | ✓ | ✓ |
 | Linux Yocto | ✓ | ✓ |
 | Linux Debian | ✓ | ✓ |
 
@@ -43,7 +44,7 @@ strings /vendor/lib64/libadla.so | grep LIBADLA
 # strings /vendor/lib/libadla.so | grep LIBADLA
 ```
 
-**Linux（Yocto / Debian）：**
+**Linux（Buildroot / Yocto / Debian）：**
 
 ```bash
 adb shell
@@ -83,6 +84,11 @@ cmake --version
 
 下载 [android-ndk-r25c](https://github.com/android/ndk/wiki/Unsupported-Downloads)，解压到本地目录（如 `/opt/android-ndk-r25c`），然后修改 `build-android64.sh` 或 `build-android32.sh` 第 4 行的 `ANDROID_NDK_PATH`。
 
+**Linux Buildroot**
+
+- 64 位：下载 [gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu](https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz)，解压到指定目录（如 `/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu`），修改 `build-buildroot64.sh` 第 4 行的 `BUILDROOT_TOOLCHAIN_PATH`。
+- 32 位：下载 [gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf](https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf.tar.xz)，解压到指定目录（如 `/opt/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf`），修改 `build-buildroot32.sh` 第 4 行的 `BUILDROOT_TOOLCHAIN_PATH`。
+
 **Linux Yocto / Debian**
 
 - 64 位：下载 [poky-glibc-x86_64-meta-toolchain-armv8a-mesont7-an400-5.15-a64-toolchain-4.0.20.sh](https://pub-8378326bd0fe4b1d9312a3847f6316a2.r2.dev/toolchain/yocto_toolchain/64/poky-glibc-x86_64-meta-toolchain-armv8a-mesont7-an400-5.15-a64-toolchain-4.0.20.sh)。
@@ -100,6 +106,12 @@ cd amlnn_runtime/llm_runtime/example/base_api
 
 # Android 32
 ./build-android32.sh
+
+# Linux Buildroot 64
+./build-buildroot64.sh
+
+# Linux Buildroot 32
+./build-buildroot32.sh
 
 # Linux Yocto 64 / Debian 64
 ./build-yocto64.sh
@@ -126,7 +138,7 @@ adb push /path/to/model.adla /data/local/tmp/
 adb shell
 
 cd /data/local/tmp
-./base_api_llm model.adla --model_type qwen
+./base_api_llm model.adla
 ```
 
 运行成功后，将进入交互式对话界面，直接输入问题即可。
@@ -138,7 +150,6 @@ cd /data/local/tmp
 `base_api_llm.cpp` 示例覆盖了 LLM 推理的完整工作流：
 
 1. **初始化**：调用 `aml_llm_init` 加载 `.adla` 模型，注册 token 回调。
-2. **设置对话模板**（可选）：根据 `--model_type` 调用 `aml_llm_set_chat_template` 设置内置模板。
 3. **交互循环**：等待用户输入，调用 `aml_llm_run` 执行推理，通过回调逐 token 流式输出。
 4. **交互命令**：`new_talk` 重置对话历史，`break` 中断当前生成，`exit` 退出程序。
 5. **清理**：调用 `aml_llm_uninit` 释放资源。
@@ -146,28 +157,28 @@ cd /data/local/tmp
 ### 参数说明
 
 ```
-base_api_llm <model_path> [--model_type <type>]
+base_api_llm <model_path>
 ```
 
 | 参数 | 说明 |
 | :--- | :--- |
 | `model_path` | 编译后的 `.adla` LLM 模型路径，由 `amlnn_toolkit` 生成 |
-| `--model_type` | 内置对话模板类型，见下表。省略则使用模型内置默认模板 |
 
 ### 支持的模型类型
 
-| `--model_type` | 适用模型 |
-| :--- | :--- |
-| `qwen` | Qwen、InternVL |
-| `deepseek` | DeepSeek |
-| `gemma` | Gemma |
-| `gemma3` | Gemma3 |
-| `llama` | Llama |
-| `tiny_llama` | TinyLlama |
-| `tiny_llama_v0_4` | TinyLlama v0.4 |
-| `phi_1_5` | Phi-1.5 |
-| `phi_2` | Phi-2 |
-| `minicpm4` | MiniCPM4 |
+| 适用模型 |
+| :--- |
+| Qwen、InternVL |
+| DeepSeek |
+| Gemma |
+| Gemma3 |
+| Gemma4 |
+| Llama |
+| TinyLlama |
+| TinyLlama v0.4 |
+| Phi-1.5 |
+| Phi-2 |
+| MiniCPM4 |
 
 ---
 

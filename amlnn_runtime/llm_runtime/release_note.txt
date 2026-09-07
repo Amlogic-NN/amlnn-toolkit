@@ -1,4 +1,23 @@
 ##########################################################
+Release notes for llmsdk_v1.2.0, 2026.08
+
+Change Lists:
+
+New Feature:
+    1. added VLM support
+    2. added support for VLM video stream input
+    3. increased prompt size from 256 to 4K
+    4. added support for configuring top_k, top_p, temperature, and repeat_penalty at runtime
+    5. added support for token_id input and output
+    6. added support for Chain Sampler, Grammar, and Reasoning Budget
+    7. added support for multi-image input
+    8. added support for gemma4
+    9. reserved an embedding mode to support future text embedding model output for RAG
+    10. support driver v2.0.2.3.2.0
+
+Solve bugs:
+
+##########################################################
 Release notes for llmsdk_v1.1.0, 2026.05
 
 Change Lists:

@@ -86,8 +86,8 @@ cmake --version
 
 **Linux Buildroot**
 
-- 64 位：下载 [gcc-linaro-6.3.1-2017.02-x86_64_aarch64-linux-gnu](https://releases.linaro.org/components/toolchain/binaries/6.3-2017.02/aarch64-linux-gnu/)，解压到指定目录（如 `/opt/gcc-linaro-6.3.1-2017.02-x86_64_aarch64-linux-gnu`），修改 `build-buildroot64.sh` 第 4 行的 `BUILDROOT_TOOLCHAIN_PATH`。
-- 32 位：下载 [gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf](https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-a/10.3-2021.07/binrel/)，解压到指定目录（如 `/opt/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf`），修改 `build-buildroot32.sh` 第 4 行的 `BUILDROOT_TOOLCHAIN_PATH`。
+- 64 位：下载 [gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu](https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz)，解压到指定目录（如 `/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu`），修改 `build-buildroot64.sh` 第 4 行的 `BUILDROOT_TOOLCHAIN_PATH`。
+- 32 位：下载 [gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf](https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf.tar.xz)，解压到指定目录（如 `/opt/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf`），修改 `build-buildroot32.sh` 第 4 行的 `BUILDROOT_TOOLCHAIN_PATH`。
 
 **Linux Yocto / Debian**
 

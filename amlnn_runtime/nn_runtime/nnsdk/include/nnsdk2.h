@@ -156,7 +156,7 @@ typedef struct _amlnn_tensor_attr
 
     uint32_t n_elems;                               /* the number of elements. */
     uint32_t size;                                  /* the bytes size of tensor. */
-    uint32_t size_with_stride;                      /* the bytes size of tensor with stride (For DMA mode). */
+    uint32_t size_with_stride;                      /* Deprecated */
 
     amlnn_tensor_format fmt;                        /* the data format of tensor. */
     amlnn_tensor_type type;                         /* the data type of tensor. */
@@ -538,7 +538,7 @@ typedef struct _amlnn_softop_opt_request
 } amlnn_softop_opt_request;
 
 /*
-    The policy for setting NPU core mask.
+    The policy for setting NPU core mask. (Only supports ADLA NPU)
 */
 typedef enum _amlnn_core_mask_policy
 {
@@ -647,10 +647,6 @@ int amlnn_destroy(void* context);
     [IMPORTANT USAGE RULES]:
         1. Virtual Address Mode: Must use this function for allocation.
         Custom user-allocated virtual addresses are NOT supported.
-        2. Allocation Size: The 'size' field in amlnn_dma_memory MUST be set based on
-        'size_with_stride' from amlnn_tensor_attr to avoid hardware out-of-bounds access.
-        3. Logical Usage: While the allocated size follows 'size_with_stride',
-        data processing should only operate within the 'size' range.
 
     input:
         void* context                   the pointer of context handle.

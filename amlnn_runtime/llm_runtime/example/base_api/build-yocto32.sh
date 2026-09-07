@@ -39,4 +39,6 @@ cmake -S "${SCRIPT_DIR}" -B "${BUILD_DIR}" \
 cmake --build "${BUILD_DIR}" -j$(nproc)
 
 cp "${BUILD_DIR}/base_api_llm" "${INSTALL_DIR}/"
+cp "${BUILD_DIR}/base_api_vlm" "${INSTALL_DIR}/"
 echo "Output: ${INSTALL_DIR}/base_api_llm"
+echo "Output: ${INSTALL_DIR}/base_api_vlm"

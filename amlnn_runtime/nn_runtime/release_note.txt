@@ -1,4 +1,28 @@
 ##########################################################
+Release notes for nnsdk2_v1.0.1, nnsdk1_v3.0.2, 2026.08
+
+Change Lists:
+
+New Feature:
+    1.[nnsdk1] support driver v2.0.2.3.2.0
+
+Solve bugs:
+    1.[nnsdk1] fixed model_size print error
+    2.[nnsdk2] modify the value of mmap_enable
+    3.[nnsdk2] locking during the model loading phase
+
+##########################################################
+Release notes for nnsdk2_v1.0.0, nnsdk1_v3.0.1, 2026.05
+
+Change Lists:
+
+New Feature:
+
+Solve bugs:
+    1. [nnsdk1] fixed issues with DMA phy addr and size transfer
+    2. [nnsdk1] fixed the modeltype exception caused by PQNet.nb
+
+##########################################################
 Release notes for nnsdk2_v1.0.0, nnsdk1_v3.0.0, 2026.05
 
 Change Lists:

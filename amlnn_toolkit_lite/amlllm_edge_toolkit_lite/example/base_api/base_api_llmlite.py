@@ -15,9 +15,9 @@
 #
 
 import argparse
+import queue
 import sys
-from datetime import datetime
-
+import threading
 from amlllmlite.api import AMLLLMLite
 from amlllmlite.api.inference import RunStatus
 
@@ -37,56 +37,6 @@ def stream_callback(token, userdata=None):
         print(text, end="", flush=True)
 
 
-def apply_model_template(amlllm: AMLLLMLite, model_type: str):
-    """Set chat templates using the same defaults as the C demo."""
-    system_prompt = ""
-    prompt_prefix = ""
-    prompt_postfix = ""
-
-    if model_type == "qwen":
-        system_prompt = "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n"
-        prompt_prefix = "<|im_start|>user\n"
-        prompt_postfix = "<|im_end|>\n<|im_start|>assistant\n"
-    elif model_type == "deepseek":
-        system_prompt = "<｜begin▁of▁sentence｜>"
-        prompt_prefix = "<｜User｜>"
-        prompt_postfix = "<｜Assistant｜>please don't include <think> tags in your answers\n"
-    elif model_type in ("gemma", "gemma3"):
-        system_prompt = "<bos>"
-        prompt_prefix = "<start_of_turn>user\n"
-        prompt_postfix = "<end_of_turn>\n<start_of_turn>model\n"
-    elif model_type == "llama":
-        date_str = datetime.now().strftime("%d %b %Y")
-        system_prompt = (
-            "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
-            "Cutting Knowledge Date: December 2023\n"
-            f"Today Date: {date_str}\n\n"
-            "<|eot_id|>"
-        )
-        prompt_prefix = "<|start_header_id|>user<|end_header_id|>\n\n"
-        prompt_postfix = "<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
-    elif model_type == "tiny_llama":
-        system_prompt = "<|im_start|>system\nYou are a friendly chatbot.<|im_end|>\n"
-        prompt_prefix = "<|im_start|>user\n"
-        prompt_postfix = "<|im_end|>\n<|im_start|>assistant\n"
-    elif model_type == "tiny_llama_v0_4":
-        system_prompt = "<s>"
-        prompt_prefix = "<|im_start|>user\n"
-        prompt_postfix = "<|im_end|>\n<|im_start|>assistant\n"
-    elif model_type == "phi_1_5":
-        prompt_postfix = "\nAnswer:"
-    elif model_type == "phi_2":
-        prompt_prefix = "Instruct: "
-        prompt_postfix = "\nOutput:"
-    elif model_type == "minicpm4":
-        system_prompt = ""
-        prompt_prefix = "<im_start>user\n"
-        prompt_postfix = "<im_end>\n"
-
-    if system_prompt or prompt_prefix or prompt_postfix:
-        amlllm.set_chat_template(system_prompt, prompt_prefix, prompt_postfix)
-
-
 def parse_args():
     parser = argparse.ArgumentParser(description="Amlogic LLM interactive demo (Python)")
     parser.add_argument("--model", required=True, help="Path to LLM model file")
@@ -96,9 +46,6 @@ def parse_args():
     parser.add_argument("--temperature", type=float, default=1.0, help="Softmax temperature")
     parser.add_argument("--repeat-penalty", type=float, default=1.1, dest="repeat_penalty", help="Repeat penalty factor")
     parser.add_argument("--log-level", default="ERROR", dest="log_level", choices=["DEBUG", "INFO", "WARNING", "ERROR"])
-    parser.add_argument("--model-type", default="none", dest="model_type",
-                        choices=["none", "qwen", "deepseek", "gemma", "gemma3", "llama", "tiny_llama", "tiny_llama_v0_4", "phi_1_5", "phi_2", "minicpm4"],
-                        help="Optional builtin model template")
     return parser.parse_args()
 
 
@@ -116,38 +63,50 @@ def main():
     )
     amlllm.init()
 
-    if args.model_type != "none":
-        apply_model_template(amlllm, args.model_type)
-
     print("Welcome to Amlogic LLM interactive demo (Python).")
     print("Commands: exit | new_talk | break")
 
     user_state = {"request_id": 0, "printed": False}
 
-    try:
+    input_queue = queue.Queue()
+
+    def read_input():
         while True:
             try:
-                user_input = input("\nLLM@Amlogic>>> ").strip()
+                user_input = input().strip()
             except EOFError:
-                print("\nExit")
+                input_queue.put("exit")
                 break
-
-            if not user_input:
-                print("Please enter a non-empty prompt.")
+            if user_input == "break":
+                try:
+                    amlllm.break_generation()
+                    print("\nStop signal sent.")
+                except Exception as exc:
+                    print(f"\nBreak failed: {exc}")
                 continue
-
+            if user_input == "new_talk":
+                try:
+                    amlllm.reset_session()
+                    print("\nConversation state cleared.")
+                except Exception as exc:
+                    print(f"\nReset failed: {exc}")
+                continue
+            input_queue.put(user_input)
             if user_input == "exit":
                 break
 
-            if user_input == "new_talk":
-                amlllm.reset_session()
-                print("Conversation state cleared.")
-                continue
+    input_thread = threading.Thread(target=read_input, daemon=True)
+    input_thread.start()
 
-            if user_input == "break":
-                amlllm.break_generation()
-                print("Stop signal sent.")
+    try:
+        while True:
+            print("\nLLM@Amlogic>>> ", end="", flush=True)
+            user_input = input_queue.get()
+            if not user_input:
+                print("Please enter a non-empty prompt.")
                 continue
+            if user_input == "exit":
+                break
 
             try:
                 user_state["request_id"] += 1
@@ -158,6 +117,7 @@ def main():
                     run_mode="generate",
                     retain_history=False,
                     enable_think=False,
+                    role="user",
                     user_data=user_state,
                 )
                 if not result["text"].endswith("\n"):
