@@ -28,12 +28,12 @@ amlnn =  AMLNN(log_level='DEBUG')
 class aml_nn_model:
     def __init__(self):
 
-        self.mdoel_type='pt2'
+        self.model_type='pt2'
         self.model_path='/xxxxx/resnet50_exported.pt2'
         self.source_file='/xxxxxx/ILSVRC2012_val_256.txt'
         self.normalization_mean = [[123.675, 116.28, 103.53]]
         self.normalization_std =  [[58.395, 57.12, 57.375]]
-        self.itreation=32
+        self.iteration=32
         self.outdir='./'
         self.input_shape=[224,224,3]
         self.input_npy_path=['/xxxx/resnet50_nhwc.npy']
@@ -47,7 +47,7 @@ class aml_nn_model:
         self.omse_range =[80,85,90,95,98]
         self.omse_step =[0.01,0.012,0.014,0.016,0.018,0.02]
         self.num_histogram_bins = [2048, 4096, 8192 , 12288,16384]
-        os.environ['ADLA_ENABLE_CHANNEL_LAST_IO']=str(True)
+        os.environ['AMLNN_ENABLE_CHANNEL_LAST_IO']=str(True)
         self.result="test_result.txt"
         self.output=[]
         self.euclidean_dis=[]
@@ -120,11 +120,11 @@ class aml_nn_model:
 
 def main(argv):
     aml_model=aml_nn_model()
-    if aml_model.mdoel_type=="pt2":
+    if aml_model.model_type=="pt2":
         amlnn.load_pt2(aml_model.model_path)
     elif aml_model.model_type=="tflite":
         amlnn.load_tflite(aml_model.model_path)
-    elif aml_model.mdoel_type=="pt":
+    elif aml_model.model_type=="pt":
         amlnn.load_pytorch(aml_model.model_path)
     elif aml_model.model_type=="onnx":
         amlnn.load_onnx(aml_model.model_path)
@@ -145,7 +145,7 @@ def main(argv):
                                      percentile_alpha=percentile_alpha,
                                      inference_input_type=aml_model.inference_input_type,
                                      inference_output_type=aml_model.inference_output_type)
-                        amlnn.compile(dataset=aml_model.source_file, iterations=aml_model.itreation)
+                        amlnn.compile(dataset=aml_model.source_file, iterations=aml_model.iteration)
                         aml_model.middle_tflite=amlnn.base.params_config["model_ir_path"]
                         cmd_line=" -- activation_quant_algo {} --percentile_sigma {} --percentile_alpha {} --weight_quant_algo {} ".format(
                         activation_quant_algo,percentile_sigma,percentile_alpha,weight_quant_algo)
@@ -166,7 +166,7 @@ def main(argv):
                                      omse_steps=omse_steps,
                                      inference_input_type=aml_model.inference_input_type,
                                      inference_output_type=aml_model.inference_output_type)
-                        amlnn.compile(dataset=aml_model.source_file, iterations=aml_model.itreation)
+                        amlnn.compile(dataset=aml_model.source_file, iterations=aml_model.iteration)
                         aml_model.middle_tflite=amlnn.base.params_config["model_ir_path"]
                         cmd_line=" -- activation_quant_algo {} --omse_steps {} --omse_range {} --weight_quant_algo {} ".format(
                         activation_quant_algo,omse_steps,omse_range,weight_quant_algo)
@@ -185,7 +185,7 @@ def main(argv):
                                      histogram_bins=histogram_bins,
                                      inference_input_type=aml_model.inference_input_type,
                                      inference_output_type=aml_model.inference_output_type)
-                        amlnn.compile(dataset=aml_model.source_file, iterations=aml_model.itreation)
+                        amlnn.compile(dataset=aml_model.source_file, iterations=aml_model.iteration)
                         aml_model.middle_tflite=amlnn.base.params_config["model_ir_path"]
                         cmd_line=" -- activation_quant_algo {} --histogram_bins {} --weight_quant_algo {} ".format(
                         activation_quant_algo,histogram_bins,weight_quant_algo)
@@ -202,7 +202,7 @@ def main(argv):
                              output_dir=aml_model.outdir,
                              inference_input_type=aml_model.inference_input_type,
                              inference_output_type=aml_model.inference_output_type)
-                amlnn.compile(dataset=aml_model.source_file, iterations=aml_model.itreation)
+                amlnn.compile(dataset=aml_model.source_file, iterations=aml_model.iteration)
                 aml_model.middle_tflite=amlnn.base.params_config["model_ir_path"]
                 cmd_line=" -- activation_quant_algo {} --weight_quant_algo {} ".format(
                 activation_quant_algo,weight_quant_algo)
