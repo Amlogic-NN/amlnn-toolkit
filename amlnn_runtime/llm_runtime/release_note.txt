@@ -1,4 +1,18 @@
 ##########################################################
+Release notes for llmsdk_v1.2.1, 2026.09
+
+Change Lists:
+
+New Feature:
+    1. support driver v2.0.2.3.4.0
+    2. added support for fastvlm
+    3. added support for vlm history info
+
+Solve bugs:
+    1. fix the duplicate issue caused by seeds in samplinglib
+    2. fix the printing time at each stage
+
+##########################################################
 Release notes for llmsdk_v1.2.0, 2026.08
 
 Change Lists:

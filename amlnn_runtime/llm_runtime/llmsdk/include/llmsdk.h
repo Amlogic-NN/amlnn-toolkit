@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-#define LLMSDK_VERSION "LLMSDK, v1.2.0, 2026.08" // v<Major>.<Minor>.<Patch>
+#define LLMSDK_VERSION "LLMSDK, v1.2.1, 2026.09" // v<Major>.<Minor>.<Patch>
 
 /**
  * @typedef LLMContext

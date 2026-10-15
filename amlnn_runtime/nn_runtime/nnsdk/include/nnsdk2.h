@@ -39,6 +39,7 @@ extern "C" {
 #define AMLNN_MAX_DIMS                           6       /* maximum dimension of tensor. */
 #define AMLNN_MAX_NAME_LEN                       256     /* maximum name length of tensor. */
 #define AMLNN_MAX_DYNAMIC_SHAPE_NUM              64      /* maximum number of dynamic shape for each input. */
+#define AMLNN_MAX_NORMALIZATION_NUM              16      /* maximum number of normalization values for each input. */
 
 
 /*
@@ -60,6 +61,8 @@ typedef enum _amlnn_query_cmd
                                              this query needs to be valid after amlnn_run. */
     AMLNN_QUERY_MODEL_SOFTOP = 9,         /* query model software operator info. (Only supports ADLA NPU) (TODO) */
     AMLNN_QUERY_NPU_CORE_STATUS = 10,     /* query NPU core status. (Only supports ADLA NPU) */
+    AMLNN_QUERY_SUBGRAPH_NUM = 11,        /* query the number of subgraphs/submodels. */
+    AMLNN_QUERY_INPUT_MEAN_STD = 12,      /* query input normalization mean and std. (Only supports ADLA NPU) */
     AMLNN_QUERY_CMD_MAX
 } amlnn_query_cmd;
 
@@ -221,6 +224,25 @@ typedef struct _amlnn_npu_core_status
     uint64_t busy_mask;                            /* NPU cores currently busy. */
     uint8_t reserved[64];                          /* reserved. */
 } amlnn_npu_core_status;
+
+/*
+    The information for AMLNN_QUERY_SUBGRAPH_NUM.
+*/
+typedef struct _amlnn_subgraph_num
+{
+    uint32_t n_subgraph;
+} amlnn_subgraph_num;
+
+/*
+    The information for AMLNN_QUERY_INPUT_MEAN_STD. (Only supports ADLA NPU)
+*/
+typedef struct _amlnn_input_mean_std
+{
+    uint32_t index;                                /* input parameter, the index of input tensor. */
+    uint32_t n_values;                             /* the number of normalization values. */
+    float mean[AMLNN_MAX_NORMALIZATION_NUM];       /* normalization mean values. */
+    float std[AMLNN_MAX_NORMALIZATION_NUM];        /* normalization std values. */
+} amlnn_input_mean_std;
 
 /*
     The backend type for init.
@@ -733,6 +755,18 @@ int amlnn_set_input_shapes(void* context, uint32_t n_inputs, amlnn_tensor_attr t
         int                                         error code.
 */
 int amlnn_set_core_mask(void* context, amlnn_core_mask_config* core_mask_config);
+
+/*  amlnn_select_subgraph
+
+    select the active subgraph/submodel by index.
+
+    input:
+        void* context                   the pointer of context handle.
+        uint32_t subgraph_index         the index of subgraph/submodel.
+    return:
+        int                             error code.
+*/
+int amlnn_select_subgraph(void* context, uint32_t subgraph_index);
 
 #ifdef __cplusplus
 } //extern "C"

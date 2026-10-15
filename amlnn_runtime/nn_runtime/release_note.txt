@@ -1,4 +1,17 @@
 ##########################################################
+Release notes for nnsdk2_v1.1.0, nnsdk1_v3.0.3, 2026.09
+
+Change Lists:
+
+New Feature:
+    1.[nnsdk1] support driver v2.0.2.3.4.0
+    2.[nnsdk2] added query and select subgraph by index
+    3.[nnsdk2] added support for custom op
+    4.[nnsdk2] added query input mean std
+
+Solve bugs:
+
+##########################################################
 Release notes for nnsdk2_v1.0.1, nnsdk1_v3.0.2, 2026.08
 
 Change Lists:
@@ -31,7 +44,7 @@ New Feature:
     1. [nnsdk1] upgraded compiler to v0.10.13
     2. [nnsdk1] support driver v2.0.2.0.0.0
     3. [nnsdk1] adapt C4 C5 A9 chip
-    4. [nnsdk2] add query and set npu core functionality
+    4. [nnsdk2] added query and set npu core functionality
     5. [nnsdk2] support model task priority functionality
     6. [nnsdk2] support gpu and cpu delegate
     7. [nnsdk1&nnsdk2] support fp16_to_fp32 dequant
